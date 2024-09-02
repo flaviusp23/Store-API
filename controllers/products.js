@@ -40,9 +40,16 @@ const getAllProducts = async (req,res) =>{
         projection['_id'] = 0;
         projection['__v'] = 0;
     }
+    //pagination
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    
     const products = await Product
     .find(queryObject,projection)
-    .sort(sortOptions);
+    .sort(sortOptions)
+    .limit(limit)
+    .skip(skip);
     res.status(200).json({products, nbHits: products.length});
 }
 
